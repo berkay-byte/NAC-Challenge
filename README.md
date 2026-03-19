@@ -39,37 +39,52 @@ Bash
 
     docker compose up -d --build
 
-🧪 Test Senaryoları
+## 🧪 Test Senaryoları
 
-Sistemin AAA bileşenleri şu komutlarla doğrulanabilir:
+Sistemi test etmeden önce veritabanına geçerli bir bcrypt şifresiyle (şifre: `KENDİ_SİFRENİZ`) örnek bir kullanıcı eklememiz gerekmektedir.
+KOD KISMINDAN 'KENDİ_SİFRENİZ' bölümünü güncelleyiniz.
 
-1. Kimlik Doğrulama (PAP/MAB)
+### 0. Test Kullanıcısını Oluşturma
+FastAPI konteyneri üzerinden veritabanına gerçek bir bcrypt şifresi eklemek için şu komutu çalıştırın:
+Bash
+    
+    docker exec -it nac_api python -c "
+    import bcrypt
+    from database import engine
+    from sqlalchemy.orm import sessionmaker
+    from models import RadCheck
 
-PAP Testi:
-    Bash 
+    db = sessionmaker(bind=engine)()
+    hash_pw = bcrypt.hashpw(b'KENDİ_SİFRENİZ', bcrypt.gensalt()).decode()
+    user = db.query(RadCheck).filter(RadCheck.username=='test_user').first()
 
-    radtest test_user s3m_pass_123 localhost 0 testing123
+    if not user:
+        db.add(RadCheck(username='test_user', attribute='Password', op=':=', value=hash_pw))
+    else:
+        user.value = hash_pw
+    db.commit()
+    print('✅ Test kullanicisi (test_user) basariyla eklendi/guncellendi!')
+    "
 
-MAB Testi:
+1. PAP Authentication (Şifre Tabanlı)
+Bash
+
+       echo "User-Name=test_user, User-Password=s3m_pass_123" | \
+       docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
+
+(Başarılı olduğunda Access-Accept yanıtı dönecektir.)
+2. MAB Authentication (MAC Tabanlı)
 Bash
 
     echo "User-Name=AA:BB:CC:DD:EE:FF, Calling-Station-Id=AA:BB:CC:DD:EE:FF" | \
-    docker exec -i nac_radius radclient -x localhost:1812 auth testing123
+    docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
 
-2. Hesap Yönetimi (Accounting)
-
-    Oturum Başlatma (Start):
-    Bash
-
-       echo "User-Name=test_user, Acct-Status-Type=Start, Acct-Session-Id=S3M-123" | \
-       docker exec -i nac_radius radclient -x localhost:1813 acct testing123
-
-Oturum Bitirme (Stop):
+3. Accounting (Kayıt Takibi)
 Bash
 
-    echo "User-Name=test_user, Acct-Status-Type=Stop, Acct-Session-Id=S3M-123, Acct-Session-Time=60" | \
-    docker exec -i nac_radius radclient -x localhost:1813 acct testing123
-
+# Oturum Başlatma
+    echo "User-Name=test_user, Acct-Status-Type=Start, Acct-Session-Id=S3M-123" | \
+    docker exec -i nac_radius radclient -x localhost:1813 acct s3m_test_secret_key
 📂 Özellikler
 
 Bcrypt Hashing: Kullanıcı şifreleri PostgreSQL'de düz metin olarak değil, güvenli hashlenmiş olarak saklanır.
