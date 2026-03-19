@@ -19,9 +19,10 @@ Proje, mikroservis mimarisi üzerine kuruludur. FreeRADIUS, gelen istekleri rlm_
 🛠️ Kurulum ve Çalıştırma
 
 Sistemin çalışması için Docker ve Docker Compose yüklü olmalıdır.
+Depoyu Klonlayın:
 Bash
-
-    Depoyu Klonlayın: git clone https://github.com/berkay-byte/NAC-Challenge
+ 
+    git clone https://github.com/berkay-byte/NAC-Challenge
     cd NAC-Challenge
 
 
