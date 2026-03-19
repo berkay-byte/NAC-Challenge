@@ -77,10 +77,10 @@ Bash
 2. MAB Authentication (MAC Tabanlı)
 Bash
 
-    echo "User-Name=AA:BB:CC:DD:EE:FF, Calling-Station-Id=AA:BB:CC:DD:EE:FF" | \
-    docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
+       echo "User-Name=AA:BB:CC:DD:EE:FF, Calling-Station-Id=AA:BB:CC:DD:EE:FF" | \
+       docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
 
-3. Accounting (Kayıt Takibi)
+4. Accounting (Kayıt Takibi)
 Bash
 
 # Oturum Başlatma
