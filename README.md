@@ -109,7 +109,7 @@ Bash
 Son olarak veritabanına tekrar bakıyoruz. API'miz, gelen Stop paketini aldı ve o boş olan çıkış saatini ve içeride kalınan süreyi tabloya işledi:
 Bash
 
-    docker exec -it nac_db psql -U s3m_admin -d nacdb -c "SELECT username, acctstarttim
+    docker exec -it nac_db psql -U s3m_admin -d nacdb -c "SELECT username, acctstarttime, acctstoptime, acctsessiontime FROM radacct;"
 
 
 📂 Özellikler
