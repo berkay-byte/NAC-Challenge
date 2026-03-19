@@ -2,7 +2,7 @@
 
 Sistem, belgedeki teknik gereksinimlere  uygun olarak şu stack ile kurgulanmıştır:
 
-    RADIUS Sunucusu: FreeRADIUS 3.2 
+RADIUS Sunucusu: FreeRADIUS 3.2 
 
 Policy Engine: Python 3.13 & FastAPI 
 
