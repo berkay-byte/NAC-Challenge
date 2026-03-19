@@ -1,0 +1,31 @@
+server default {
+    listen {
+        type = auth
+        ipaddr = *
+        port = 0
+    }
+    listen {
+        type = acct
+        ipaddr = *
+        port = 0
+    }
+    authorize {
+        rest
+        if ("%{control:Auth-Type}" == "Accept") {
+            update {
+                &control:Auth-Type := Accept
+            }
+        }
+        if ("%{control:Auth-Type}" == "Reject") {
+            reject
+        }
+    }
+    authenticate {
+        Auth-Type rest {
+            rest
+        }
+    }
+    accounting {
+        rest
+    }
+}

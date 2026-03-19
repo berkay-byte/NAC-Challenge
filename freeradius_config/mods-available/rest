@@ -1,0 +1,24 @@
+rest {
+    connect_uri = "http://api:8000"
+
+    authorize {
+        uri = "${..connect_uri}/authorize"
+        method = 'post'
+        body = 'json'
+        force_to = 'json'
+    }
+
+    authenticate {
+        uri = "${..connect_uri}/auth"
+        method = 'post'
+        body = 'json'
+        force_to = 'json'
+    }
+
+    accounting {
+        uri = "${..connect_uri}/accounting"
+        method = 'post'
+        body = 'json'
+        force_to = 'json'
+    }
+}
