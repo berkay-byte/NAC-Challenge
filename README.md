@@ -90,6 +90,28 @@ Bash
 # Oturum Başlatma
     echo "User-Name=test_user, Acct-Status-Type=Start, Acct-Session-Id=S3M-123" | \
     docker exec -i nac_radius radclient -x localhost:1813 acct s3m_test_secret_key
+Aktif Oturumu Veritabanında Gör
+
+Bash
+
+    docker exec -it nac_db psql -U s3m_admin -d nacdb -c "SELECT username, acctsessionid, acctstarttime, acctstoptime FROM radacct;"
+
+2. Oturumu Kapat (Stop Paketi Gönder)
+   
+Bash
+
+    echo "User-Name=test_user, Acct-Status-Type=Stop, Acct-Session-Id=S3M-123, Acct-Session-Time=3600" | \
+    docker exec -i nac_radius radclient -x localhost:1813 acct s3m_test_secret_key
+
+(Bu komuttan da Accounting-Response almalısın).
+3. Oturumun Kapandığını ve Süreyi Doğrula
+
+Son olarak veritabanına tekrar bakıyoruz. API'miz, gelen Stop paketini aldı ve o boş olan çıkış saatini ve içeride kalınan süreyi tabloya işledi:
+Bash
+
+    docker exec -it nac_db psql -U s3m_admin -d nacdb -c "SELECT username, acctstarttim
+
+
 📂 Özellikler
 
 Bcrypt Hashing: Kullanıcı şifreleri PostgreSQL'de düz metin olarak değil, güvenli hashlenmiş olarak saklanır.
