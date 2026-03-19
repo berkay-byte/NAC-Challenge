@@ -73,6 +73,7 @@ Bash
        docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
 
 (Başarılı olduğunda Access-Accept yanıtı dönecektir.)
+
 2. MAB Authentication (MAC Tabanlı)
 Bash
 
