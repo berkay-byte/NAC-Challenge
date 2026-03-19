@@ -27,6 +27,7 @@ Bash
 
 
 Environment Ayarları:
+.env.example dosyasını açıp kendinize göre şifre kullanıcı ayarlayın.
 
 .env.example dosyasını .env olarak kopyalayın ve şifreleri düzenleyin.
 Bash
@@ -68,9 +69,10 @@ Bash
     "
 
 1. PAP Authentication (Şifre Tabanlı)
+KENDİ_SİFRENİZ KISMINI GÜNCELLEYİNİZ
 Bash
 
-       echo "User-Name=test_user, User-Password=s3m_pass_123" | \
+       echo "User-Name=test_user, User-Password=KENDİ_SİFRENİZ" | \
        docker exec -i nac_radius radclient -x localhost:1812 auth s3m_test_secret_key
 
 (Başarılı olduğunda Access-Accept yanıtı dönecektir.)
