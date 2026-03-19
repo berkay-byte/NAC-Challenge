@@ -22,7 +22,7 @@ Sistemin çalışması için Docker ve Docker Compose yüklü olmalıdır.
 Bash
 
     Depoyu Klonlayın: git clone https://github.com/berkay-byte/NAC-Challenge
-    cd s3m-nac-project
+    cd NAC-Challenge
 
 
 Environment Ayarları:
