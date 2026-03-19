@@ -19,20 +19,18 @@ Proje, mikroservis mimarisi üzerine kuruludur. FreeRADIUS, gelen istekleri rlm_
 🛠️ Kurulum ve Çalıştırma
 
 Sistemin çalışması için Docker ve Docker Compose yüklü olmalıdır.
+Bash
 
-    Depoyu Klonlayın:
-    Bash
+    Depoyu Klonlayın: git clone https://github.com/berkay-byte/NAC-Challenge
+    cd s3m-nac-project
 
-git clone https://github.com/berkay-byte/NAC-Challenge 
-cd s3m-nac-project
 
 Environment Ayarları:
 
 .env.example dosyasını .env olarak kopyalayın ve şifreleri düzenleyin.
-
 Bash
 
-cp .env.example .env
+    cp .env.example .env
 
 Sistemi Başlatın:
 Tüm servisler healthcheck kontrolleriyle birlikte otomatik olarak ayağa kalkacaktır.
@@ -47,10 +45,10 @@ Sistemin AAA bileşenleri şu komutlarla doğrulanabilir:
 
 1. Kimlik Doğrulama (PAP/MAB)
 
-    PAP Testi:
-    Bash
+PAP Testi:
+    Bash 
 
-radtest test_user s3m_pass_123 localhost 0 testing123
+    radtest test_user s3m_pass_123 localhost 0 testing123
 
 MAB Testi:
 Bash
@@ -63,8 +61,8 @@ Bash
     Oturum Başlatma (Start):
     Bash
 
-echo "User-Name=test_user, Acct-Status-Type=Start, Acct-Session-Id=S3M-123" | \
-docker exec -i nac_radius radclient -x localhost:1813 acct testing123
+       echo "User-Name=test_user, Acct-Status-Type=Start, Acct-Session-Id=S3M-123" | \
+       docker exec -i nac_radius radclient -x localhost:1813 acct testing123
 
 Oturum Bitirme (Stop):
 Bash
@@ -74,7 +72,7 @@ Bash
 
 📂 Özellikler
 
-    Bcrypt Hashing: Kullanıcı şifreleri PostgreSQL'de düz metin olarak değil, güvenli hashlenmiş olarak saklanır.
+Bcrypt Hashing: Kullanıcı şifreleri PostgreSQL'de düz metin olarak değil, güvenli hashlenmiş olarak saklanır.
 
 Dinamik Yetkilendirme: Kullanıcı grubuna göre (Admin, Employee, Guest) dinamik VLAN atamaları (Tunnel-Private-Group-Id) yapılır.
 
