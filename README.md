@@ -75,6 +75,10 @@ Bash
 (Başarılı olduğunda Access-Accept yanıtı dönecektir.)
 
 2. MAB Authentication (MAC Tabanlı)
+Mac Adresini Veritabanına Ekleme
+Bash
+
+       docker exec -it nac_db psql -U s3m_admin -d nacdb -c "INSERT INTO radcheck (username, attribute, op, value) VALUES ('AA:BB:CC:DD:EE:FF', 'Auth-Type', ':=', 'Accept');"
 Bash
 
        echo "User-Name=AA:BB:CC:DD:EE:FF, Calling-Station-Id=AA:BB:CC:DD:EE:FF" | \
