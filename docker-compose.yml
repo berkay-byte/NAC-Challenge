@@ -1,0 +1,94 @@
+#docker-compose.yml
+#define networks, tag nac_network and network type bridge
+networks:
+  nac_network:
+    driver: bridge
+
+#we define volumes for data persistance  
+volumes:
+  postgres_data:
+  redis_data:
+
+#we start services  
+services:
+  #PostgreSQL Service
+  postgres:
+    image: postgres:18-alpine # we define desired image
+    container_name: nac_db # tag nac_db
+    env_file: 
+      - .env # SECRET
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    #we connect postgresql to network
+    networks:
+      - nac_network
+    #we create check system and necessary
+    healthcheck:
+      #this command check postgre ready or not ready 
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      #every 10 seconds again check
+      interval: 10s
+      timeout: 5s #succeed within 5 seconds
+      retries: 5 #if 5 repeat this means unhealthy
+
+  #Redis Service  
+  redis:
+    image: redis:8-alpine #we define desired image
+    container_name: nac_redis
+    volumes:
+      - redis_data:/data 
+    networks:
+      - nac_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"] #this command ask redis Are u ready?
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  #we build api service      
+  api:      
+    build:
+      #Api service use ./api
+      context: ./api
+    container_name: nac_api
+    env_file: 
+      - .env
+    #connection host to api
+    ports: 
+      - "8000:8000"
+    networks:
+      - nac_network
+    depends_on: # we check redis and postgres healhty if unhealhty not start api
+      postgres:
+        condition: service_healthy
+      redis: 
+        condition: service_healthy
+    healthcheck:
+      #check api works or not
+      test: ["CMD", "curl", "-f", "http://localhost:8000/users"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  freeradius:  
+    image: freeradius/freeradius-server:latest-3.2 #we define desired image
+    container_name: nac_radius
+    ports:
+      - "1812:1812/udp" #authentication and authorization port
+      - "1813:1813/udp" #Accounting port
+    volumes:
+      - ./freeradius_config/clients.conf:/etc/raddb/clients.conf
+      - ./freeradius_config/mods-enabled/rest:/etc/raddb/mods-enabled/rest
+      - ./freeradius_config/sites-enabled/default:/etc/raddb/sites-enabled/default
+    networks:
+      - nac_network
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      #check system
+      test: ["CMD", "radclient", "-x", "localhost:1812", "status", "admin"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      
